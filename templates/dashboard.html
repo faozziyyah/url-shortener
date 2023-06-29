@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block title %}
+<title>MyShortener - Dashboard</title>
+{% endblock %}
+
+{% block home_active %}
+class="active"
+{% endblock %}
+
+{% block content %}
+
+    <section class="hero-dashboard" style="padding: 50px 20px;">
+
+        {% for url in user_urls %}
+        <div class="card" style="width: 30%; border: 2px #343252 solid; padding: 15px; border-radius: 5px;">
+            <img class="card-qrcode" src="{{ url_for('generate_qr_code_url', short_id=url.short_id) }}" alt="QR Code">
+            <br>
+            <a href="{{ url_for('generate_qr_code_url', short_id=url.short_id) }}" download="qrcode image">
+              <button class="button">Download QR Code</button>
+            </a>
+            <div class="card-body">
+                <p class="card-title"><b>Link Clicks:</b> {{url.clicks}} </p>
+                <p class="card-title"> <b>Created:</b> {{ url.created_at.strftime('%B %d, %Y') }} </p>
+                <p class="card-text"><b>Original Link:</b> {{ url.original_url }}</p>
+                <p><b>Shortened Link</b>:
+                    <a href="{{ url_for('redirect_url', short_id=url.short_id) }}" style="color: aliceblue; text-decoration: underline;" target="_blank">
+                    <input type="text" value="{{host}}{{url.short_id}}" id="myInput" style="background: none; border: none; cursor: pointer; color: blue; text-decoration: underline;" disabled>
+                    </a>
+                </p>
+            </div>
+          </div>
+        {% endfor %}
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for message in messages %}
+                <strong style="color:red;">{{ message }}</strong>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+    </section>
+
+{% endblock %}

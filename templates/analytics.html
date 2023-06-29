@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block title %}
+<title>MyShortener - Analytics</title>
+{% endblock %}
+
+{% block home_active %}
+class="active"
+{% endblock %}
+
+{% block content %}
+
+
+<h1>URL Analytics</h1>
+<p>Original URL: {{ url.original_url }}</p>
+<p>Shortened URL: <a href="{{ url.short_id }}" target="_blank">{{ url.short_id }}</a></p>
+<p>Number of clicks: {{ url.clicks }}</p>
+<p>Link history:</p>
+<ul>
+    {% for link in link_history %}
+        <li>{{ link }}</li>
+    {% endfor %}
+</ul>
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        {% for message in messages %}
+            <strong style="color:red;">{{message}}</strong>
+        {% endfor %}
+    {% endif %}
+{% endwith %}
+
+
+{% endblock %}
