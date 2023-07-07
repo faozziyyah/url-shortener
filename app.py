@@ -4,8 +4,8 @@ from flask_migrate import Migrate
 from flask_login import UserMixin, login_user, LoginManager, login_required, logout_user, current_user 
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, PasswordField, BooleanField, ValidationError, TextAreaField
-from wtforms.validators import DataRequired, EqualTo, Length
+from wtforms import StringField, SubmitField, PasswordField
+from wtforms.validators import DataRequired, EqualTo
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 from decouple import config
@@ -15,10 +15,9 @@ from flask_caching import Cache
 import string
 import io
 import qrcode
-from io import BytesIO
-from base64 import b64encode
 
 app = Flask(__name__)
+
 limiter = Limiter(
     get_remote_address,
     app=app,
@@ -29,6 +28,11 @@ cache = Cache(app)
 app.config.from_object(config("APP_SETTINGS"))
 
 db = SQLAlchemy(app)
+db.init_app(app)
+
+with app.app_context():
+    db.create_all()
+
 migrate = Migrate(app, db)
 
 # Flask_Login Stuff
